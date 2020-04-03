@@ -100,4 +100,9 @@ public class Consultation implements Serializable {
         return id;
     }
     
+    public String toString(){
+        return "CONSULTATION - horaire :" + horaire + ", finie :" + finie +
+                ", commentaire :" + commentaire + ", numeroTelephone :" +
+                numeroTelephone;
+    }
 }
