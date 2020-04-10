@@ -6,7 +6,7 @@
 package fr.insalyon.dasi.metier.modele;
 
 import java.io.Serializable;
-import java.security.Timestamp;
+import java.util.Calendar; 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,7 +26,7 @@ public class Consultation implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Temporal(TemporalType.TIMESTAMP)
-    private Timestamp horaire;
+    private Calendar horaire;
     private boolean finie;
     private String commentaire;
     private String numeroTelephone;
@@ -39,7 +39,7 @@ public class Consultation implements Serializable {
     protected Consultation() {
     }
 
-    public Consultation(Timestamp horaire, boolean finie, String commentaire, String numeroTelephone, Employe employe, Client client) {
+    public Consultation(Calendar horaire, boolean finie, String commentaire, String numeroTelephone, Employe employe, Client client) {
         this.horaire = horaire;
         this.finie = finie;
         this.commentaire = commentaire;
@@ -48,11 +48,11 @@ public class Consultation implements Serializable {
         this.client = client;
     }
 
-    public Timestamp getHoraire() {
+    public Calendar getHoraire() {
         return horaire;
     }
 
-    public void setHoraire(Timestamp horaire) {
+    public void setHoraire(Calendar horaire) {
         this.horaire = horaire;
     }
 

@@ -6,10 +6,13 @@
 package fr.insalyon.dasi.metier.modele;
 
 import java.io.Serializable;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.MappedSuperclass;
 
 /**
@@ -22,9 +25,9 @@ Nous ne specifions pas la directive @DiscriminatorValue puisque la stratégie
 utilisée par défaut nous convient
 */
 
-
-@Inheritance
-@MappedSuperclass //les champs sont persistants et il n'est pas possible d'effectuer des requêtes
+@DiscriminatorColumn(name="TYPE")
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@Entity//les champs sont persistés et il n'est pas possible d'effectuer des requêtes
 public abstract class Medium implements Serializable  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

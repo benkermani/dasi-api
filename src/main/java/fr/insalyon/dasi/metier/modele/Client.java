@@ -46,7 +46,24 @@ public class Client implements Serializable {
         this.adresseEmail = mail;
         this.motDePasse = motDePasse;
     }
+    
+    public Client(String nom, String prenom, String mail, String motDePasse, Date dateNaissance) {
+        this.nom = nom;
+        this.prenom = prenom;
+        this.adresseEmail = mail;
+        this.motDePasse = motDePasse;
+        this.dateNaissance = dateNaissance;
+    }
 
+    public void setProfilAstral(ProfilAstral profilAstral) {
+        this.profilAstral = profilAstral;
+    }
+
+    public ProfilAstral getProfilAstral() {
+        return profilAstral;
+    }
+    
+    
     public Long getId() {
         return id;
     }

@@ -2,13 +2,17 @@ package fr.insalyon.dasi.ihm.console;
 
 import fr.insalyon.dasi.dao.JpaUtil;
 import fr.insalyon.dasi.metier.modele.Client;
-import fr.insalyon.dasi.metier.service.Service;
+import fr.insalyon.dasi.metier.modele.Employe;
+import fr.insalyon.dasi.metier.modele.Medium;
+import fr.insalyon.dasi.metier.service.ServiceAuthentification;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.persistence.Query;
 
 /**
  *
@@ -22,17 +26,38 @@ public class Main {
         // Contrôlez l'affichage du log de JpaUtil grâce à la méthode log de la classe JpaUtil
         JpaUtil.init();
 
-        initialiserClients();            // Question 3
+        //initialiserClients();            // Question 3
         testerInscriptionClient();       // Question 4 & 5
         testerRechercheClient();         // Question 6
         testerListeClients();            // Question 7
         testerAuthentificationClient();  // Question 8
-        //saisirInscriptionClient();       // Question 9
-        //saisirRechercheClient();
+        initialiserMediums();
+        initialiserEmployes();
+        
+        
+        
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("Predictif");
+        EntityManager em = emf.createEntityManager();
+        String jpql = "select m from Medium m";
+        Query query = em.createQuery(jpql);
+        List<Medium> resultat = (List<Medium>)query.getResultList();
+        for(Medium m : resultat){
+            System.out.println(m.getGenre());
+            System.out.println("Coucou c'est moi");
 
+            
+        } 
         JpaUtil.destroy();
     }
-
+    
+    public static void initialiserMediums(){
+        ServiceAuthentification sa = new ServiceAuthentification();
+        sa.initialiserMedium();
+    }
+    public static void initialiserEmployes(){
+        ServiceAuthentification sa = new ServiceAuthentification();
+        sa.initialiserEmploye();
+    }
     public static void afficherClient(Client client) {
         System.out.println("-> " + client);
     }
@@ -89,8 +114,8 @@ public class Main {
         System.out.println("**** testerInscriptionClient() ****");
         System.out.println();
         
-        Service service = new Service();
-        Client claude = new Client("Chappe", "Claude", "claude.chappe@insa-lyon.fr", "HaCKeR");
+        ServiceAuthentification service = new ServiceAuthentification();
+        Client claude = new Client("Chappe", "Claude", "claude.chappe@insa-lyon.fr", "HaCKeR", new Date(90,04,27));
         Long idClaude = service.inscrireClient(claude);
         if (idClaude != null) {
             System.out.println("> Succès inscription");
@@ -99,7 +124,7 @@ public class Main {
         }
         afficherClient(claude);
 
-        Client hedy = new Client("Lamarr", "Hedy", "hlamarr@insa-lyon.fr", "WiFi");
+        Client hedy = new Client("Lamarr", "Hedy", "hlamarr@insa-lyon.fr", "WiFi",new Date(100, 05, 12));
         Long idHedy = service.inscrireClient(hedy);
         if (idHedy != null) {
             System.out.println("> Succès inscription");
@@ -108,7 +133,7 @@ public class Main {
         }
         afficherClient(hedy);
 
-        Client hedwig = new Client("Lamarr", "Hedwig Eva Maria", "hlamarr@insa-lyon.fr", "WiFi");
+        Client hedwig = new Client("Lamarr", "Hedwig Eva Maria", "hlamarr@insa-lyon.fr", "WiFi", new Date(100, 05, 22));
         Long idHedwig = service.inscrireClient(hedwig);
         if (idHedwig != null) {
             System.out.println("> Succès inscription");
@@ -120,11 +145,13 @@ public class Main {
 
     public static void testerRechercheClient() {
         
+        
+        
         System.out.println();
         System.out.println("**** testerRechercheClient() ****");
         System.out.println();
         
-        Service service = new Service();
+        ServiceAuthentification service = new ServiceAuthentification();
         long id;
         Client client;
 
@@ -162,7 +189,7 @@ public class Main {
         System.out.println("**** testerListeClients() ****");
         System.out.println();
         
-        Service service = new Service();
+        ServiceAuthentification service = new ServiceAuthentification();
         List<Client> listeClients = service.listerClients();
         System.out.println("*** Liste des Clients");
         if (listeClients != null) {
@@ -181,7 +208,7 @@ public class Main {
         System.out.println("**** testerAuthentificationClient() ****");
         System.out.println();
         
-        Service service = new Service();
+        ServiceAuthentification service = new ServiceAuthentification();
         Client client;
         String mail;
         String motDePasse;
@@ -218,7 +245,7 @@ public class Main {
     }
 
     public static void saisirInscriptionClient() {
-        Service service = new Service();
+        ServiceAuthentification service = new ServiceAuthentification();
 
         System.out.println();
         System.out.println("Appuyer sur Entrée pour passer la pause...");
@@ -248,7 +275,7 @@ public class Main {
     }
 
     public static void saisirRechercheClient() {
-        Service service = new Service();
+        ServiceAuthentification service = new ServiceAuthentification();
 
         System.out.println();
         System.out.println("*********************");

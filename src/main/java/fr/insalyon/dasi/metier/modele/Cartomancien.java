@@ -5,6 +5,7 @@
  */
 package fr.insalyon.dasi.metier.modele;
 
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 /**
@@ -12,6 +13,7 @@ import javax.persistence.Entity;
  * @author Benjamin
  */
 @Entity
+@DiscriminatorValue("CARTOMANCIEN")
 public class Cartomancien extends Medium {
 
     public Cartomancien() {
