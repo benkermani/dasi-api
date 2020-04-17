@@ -2,6 +2,7 @@ package fr.insalyon.dasi.ihm.console;
 
 import fr.insalyon.dasi.dao.JpaUtil;
 import fr.insalyon.dasi.metier.modele.Client;
+import fr.insalyon.dasi.metier.modele.Consultation;
 import fr.insalyon.dasi.metier.modele.Employe;
 import fr.insalyon.dasi.metier.modele.Medium;
 import fr.insalyon.dasi.metier.service.ServiceAuthentification;
@@ -27,7 +28,7 @@ public class Main {
         // Contrôlez l'affichage du log de JpaUtil grâce à la méthode log de la classe JpaUtil
         JpaUtil.init();
 
-        //initialiserClients();            // Question 3
+        initialiserClients();            // Question 3
         testerInscriptionClient();       // Question 4 & 5
         testerRechercheClient();         // Question 6
         testerListeClients();            // Question 7
@@ -39,25 +40,31 @@ public class Main {
         //Client a = sa.authentifierClient("claude.chappe@insa-lyon.fr","HaCKeR");
         //Employe e = sa.authentifierEmploye("0252030425", "chaussette");
         
-        
-        /*EntityManagerFactory emf = Persistence.createEntityManagerFactory("Predictif");
-        EntityManager em = emf.createEntityManager();
-        String jpql = "select m from Medium m";
-        Query query = em.createQuery(jpql);
-        List<Medium> resultat = (List<Medium>)query.getResultList();
-        for(Medium m : resultat){
-            System.out.println(m.getGenre());
-            System.out.println("Coucou c'est moi");
-
-            
-        }
-        */
         ServiceAuthentification sa = new ServiceAuthentification();
         ServiceConsultation sc = new ServiceConsultation();
-        List<Medium> listMed = sc.listerMediums();
-        for(Medium m : listMed){
-            System.out.println(m.toString());
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("Predictif");
+        EntityManager em = emf.createEntityManager();
+        String jpql = "select m from Employe m";
+        Query query = em.createQuery(jpql);
+     
+        List<Client> listeClients = sa.listerClients();
+        List<Medium> listeMediums = sc.listerMediums();
+        for(Client c : listeClients){
+            System.out.println("" + sc.demandeConsultation(c, listeMediums.get(0)));
         }
+        List<Consultation> consultations = sc.listeConsultationsClient(listeClients.get(0));
+        for(Consultation c : consultations){
+            sc.finConsultation(c, "C'était très bien");
+            System.out.println(c.toString());
+        }
+        List<Employe> resultat = (List<Employe>)query.getResultList();
+        for(Employe e : resultat){
+            System.out.println(e.toString());
+            System.out.println("" +sc.consultationEnCours(e));
+           
+        }
+
+        System.out.println(sc.obtenirPrediction(listeClients.get(0).getProfilAstral(), 4, 2, 1).toString());
         //System.out.println(a.toString());
         //System.out.println(e.toString());
         JpaUtil.destroy();

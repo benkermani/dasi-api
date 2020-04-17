@@ -5,6 +5,7 @@ import fr.insalyon.dasi.dao.ClientDao;
 import fr.insalyon.dasi.dao.EmployeDao;
 import fr.insalyon.dasi.dao.JpaUtil;
 import fr.insalyon.dasi.dao.MediumDao;
+import fr.insalyon.dasi.ihm.console.Mail;
 import fr.insalyon.dasi.metier.modele.Client;
 import fr.insalyon.dasi.metier.modele.Medium;
 import fr.insalyon.dasi.metier.modele.Spirite;
@@ -29,6 +30,9 @@ public class ServiceAuthentification {
 
     public Long inscrireClient(Client client) {
         Long resultat = null;
+        Mail mail = new Mail();
+        mail.setExpediteur("contact@predict.if");
+        mail.setDestinataire(client.getAdresseEmail());
         JpaUtil.creerContextePersistance();
         try {
             JpaUtil.ouvrirTransaction();
@@ -43,11 +47,18 @@ public class ServiceAuthentification {
             
             JpaUtil.validerTransaction();
             resultat = client.getId();
+            mail.setSujet("Bienvenue chez PREDICT’IF");
+            mail.setCorps("Bonjour " + client.getPrenom() + ", nous vous confirmons votre inscription au service PREDICT’IF.Rendez-vous  vite  sur  notre  site  pour  consulter  votre profil  astrologique  et  profiter  des  dons incroyables de nos mediums");
+            
+            
         } catch (Exception ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service inscrireClient(client)", ex);
             JpaUtil.annulerTransaction();
             resultat = null;
+            mail.setSujet("Echec de l’inscription chez PREDICT’IF");
+            mail.setCorps("Bonjour " + client.getPrenom() + ", votre inscription au service PREDICT’IF a malencontreusement échoué... Merci de recommencer ultérieurement.");
         } finally {
+            mail.envoyer();
             JpaUtil.fermerContextePersistance();
         }
         return resultat;
@@ -60,7 +71,7 @@ public class ServiceAuthentification {
             JpaUtil.ouvrirTransaction();
             employeDao.creer(new Employe("Arthur","poutreEnbois","0102150405","H"));
             employeDao.creer(new Employe("Sarah","cactus69insa","0102430425","F"));
-            employeDao.creer(new Employe("Baptiste","dasi","0202030435","H"));
+            employeDao.creer(new Employe("Chloé","dasi","0202030435","F"));
             employeDao.creer(new Employe("Sylvain","chaussette","0252030425","H"));
             employeDao.creer(new Employe("Elie","bonjour","0102030445","H"));
             JpaUtil.validerTransaction();

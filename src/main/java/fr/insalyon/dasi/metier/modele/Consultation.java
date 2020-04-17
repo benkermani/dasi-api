@@ -6,6 +6,7 @@
 package fr.insalyon.dasi.metier.modele;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Calendar; 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -101,7 +102,7 @@ public class Consultation implements Serializable {
     }
     
     public String toString(){
-        return "CONSULTATION - horaire :" + horaire + ", finie :" + finie +
+        return "CONSULTATION - horaire :" + (new SimpleDateFormat("yyyy-mm-dd hh:mm")).format(horaire.getTime()) + ", finie :" + finie +
                 ", commentaire :" + commentaire + ", numeroTelephone :" +
                 numeroTelephone;
     }

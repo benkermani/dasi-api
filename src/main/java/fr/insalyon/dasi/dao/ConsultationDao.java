@@ -26,7 +26,7 @@ public class ConsultationDao {
     public Consultation chercherConsultationEnCours(Employe employe) {
         EntityManager em = JpaUtil.obtenirContextePersistance();
         TypedQuery<Consultation> query = em.createQuery("SELECT c FROM "
-                + "Consultation c WHERE c.employe = :employe AND finie = FALSE ", Consultation.class);
+                + "Consultation c WHERE c.employe = :employe AND c.finie = FALSE ", Consultation.class);
         query.setParameter("employe", employe);
         List<Consultation> employes = query.getResultList();
         Consultation result = null;
@@ -52,7 +52,7 @@ public class ConsultationDao {
       
     public void sauvegarderConsultation(Consultation c){
         EntityManager em = JpaUtil.obtenirContextePersistance();
-        em.persist(c);
+        em.merge(c);
     }
     // modifier / supprimer  ... 
 }

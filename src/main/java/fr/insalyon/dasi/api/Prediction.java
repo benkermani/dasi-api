@@ -37,6 +37,10 @@ public class Prediction {
         return travail;
     }
     
-    
+    public String toString(){
+        return "Amour : " + amour + 
+                "\nSanté : " + sante +
+                "\nTravail : " + travail;
+    }
     
 }

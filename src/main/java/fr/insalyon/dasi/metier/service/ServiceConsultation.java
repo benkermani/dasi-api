@@ -18,6 +18,7 @@ import fr.insalyon.dasi.metier.modele.Employe;
 import fr.insalyon.dasi.metier.modele.Medium;
 import fr.insalyon.dasi.metier.modele.ProfilAstral;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
@@ -81,8 +82,11 @@ public class ServiceConsultation {
         consultation.setCommentaire(commentaire);
         consultation.setFinie(true);
         JpaUtil.creerContextePersistance();
+        
         try {
+            JpaUtil.ouvrirTransaction();
             cdao.sauvegarderConsultation(consultation);
+            JpaUtil.validerTransaction();
         } catch (Exception ex) {
             Logger.getAnonymousLogger().log(Level.WARNING, "Exception lors de l'appel au Service listerClients()", ex);
             
@@ -92,31 +96,44 @@ public class ServiceConsultation {
     }
     
     public boolean demandeConsultation(Client c, Medium m){
+        JpaUtil.creerContextePersistance();
         EmployeDao edao = new EmployeDao();
         Employe eLibre = edao.employeLibre(m);
+        
         if(eLibre != null){
-            Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.MINUTE,10);
-            Consultation consultation = new Consultation(cal, false ,"", eLibre.getNumeroTelephone(), eLibre, c);
-            /*Persister l'objet */
-            ConsultationDao cdao = new ConsultationDao();
-            cdao.creer(consultation);
-            Notification notifClient = new Notification();
-            notifClient.setDestinataire(c.getPrenom() + " " + c.getNom());
-            notifClient.setTelephone(c.getNumeroTelephone());
-            notifClient.setMessage("Bonjour " + c.getPrenom() + ". J’ai bien reçu "
-                    + "votre demande de consultation du " + consultation.getHoraire()
-                    + ". Vous pouvez dès à présent me contacter au " + consultation.getNumeroTelephone()
-                    + ". A tout de suite ! Médiumiquement vôtre, " + m.getDenomination());
-            notifClient.envoyer();
-            
-            Notification notifEmploye = new Notification();
-            notifEmploye.setDestinataire(eLibre.getNom());
-            notifEmploye.setTelephone(eLibre.getNumeroTelephone());
-            notifEmploye.setMessage("Bonjour " + notifEmploye.getDestinataire() + ". Consultation requise pour " + notifClient.getDestinataire() + ". Médium à incarner : " + m.getDenomination());
-            notifEmploye.envoyer();
-            return true;
+            try {
+                JpaUtil.ouvrirTransaction();
+                Calendar cal = Calendar.getInstance();
+                cal.add(Calendar.MINUTE,10);
+                Consultation consultation = new Consultation(cal, false ,"", eLibre.getNumeroTelephone(), eLibre, c);
+                /*Persister l'objet */
+                ConsultationDao cdao = new ConsultationDao();
+                cdao.creer(consultation);
+                Notification notifClient = new Notification();
+                notifClient.setDestinataire(c.getPrenom() + " " + c.getNom());
+                notifClient.setTelephone(c.getNumeroTelephone());
+                
+                notifClient.setMessage("Bonjour " + c.getPrenom() + ". J’ai bien reçu "
+                        + "votre demande de consultation du " + (new SimpleDateFormat("yyyy-mm-dd hh:mm")).format(consultation.getHoraire().getTime())
+                        + ". Vous pouvez dès à présent me contacter au " + consultation.getNumeroTelephone()
+                        + ". A tout de suite ! Médiumiquement vôtre, " + m.getDenomination());
+                notifClient.envoyer();
+                
+                Notification notifEmploye = new Notification();
+                notifEmploye.setDestinataire(eLibre.getNom());
+                notifEmploye.setTelephone(eLibre.getNumeroTelephone());
+                notifEmploye.setMessage("Bonjour " + notifEmploye.getDestinataire() + ". Consultation requise pour " + notifClient.getDestinataire() + ". Médium à incarner : " + m.getDenomination());
+                notifEmploye.envoyer();
+                JpaUtil.validerTransaction();
+                JpaUtil.fermerContextePersistance();
+                
+                return true;
+            } catch (Exception ex) {
+                Logger.getLogger(ServiceConsultation.class.getName()).log(Level.SEVERE, null, ex);
+                return false;
+            }
         }else{
+          JpaUtil.fermerContextePersistance();
           return false;
         }
         

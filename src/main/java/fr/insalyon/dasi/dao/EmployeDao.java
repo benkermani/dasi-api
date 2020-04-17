@@ -43,8 +43,8 @@ public class EmployeDao {
     public Employe employeLibre(Medium m){
         EntityManager em = JpaUtil.obtenirContextePersistance();
         TypedQuery<Employe> query = em.createQuery("SELECT e FROM Employe e "
-                + "WHERE id NOT IN "
-                + "(SELECT c.employe_id FROM Consultation c WHERE c.finie = FALSE)"
+                + "WHERE e NOT IN "
+                + "(SELECT c.employe FROM Consultation c WHERE c.finie = FALSE)"
                 + " AND e.genre = :medium_genre", Employe.class);
         query.setParameter("medium_genre", m.getGenre()); // correspond au paramètre ":mail" dans la requête
         List<Employe> employes = query.getResultList();
