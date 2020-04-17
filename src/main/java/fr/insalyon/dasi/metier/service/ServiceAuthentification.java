@@ -146,12 +146,12 @@ public class ServiceAuthentification {
         return resultat;
     }
     
-    public Employe authentifierEmploye(String mail, String motDePasse) {
+    public Employe authentifierEmploye(String numeroDeTelephone, String motDePasse) {
         Employe resultat = null;
         JpaUtil.creerContextePersistance();
         try {
             // Recherche du client
-            Employe employe = employeDao.chercherParMail(mail);
+            Employe employe = employeDao.chercherParNumeroTelephone(numeroDeTelephone);
             if (employe != null) {
                 // Vérification du mot de passe
                 if (employe.getMotDePasse().equals(motDePasse)) {

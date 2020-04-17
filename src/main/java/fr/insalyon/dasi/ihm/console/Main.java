@@ -5,6 +5,7 @@ import fr.insalyon.dasi.metier.modele.Client;
 import fr.insalyon.dasi.metier.modele.Employe;
 import fr.insalyon.dasi.metier.modele.Medium;
 import fr.insalyon.dasi.metier.service.ServiceAuthentification;
+import fr.insalyon.dasi.metier.service.ServiceConsultation;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -35,8 +36,11 @@ public class Main {
         initialiserEmployes();
         
         
+        //Client a = sa.authentifierClient("claude.chappe@insa-lyon.fr","HaCKeR");
+        //Employe e = sa.authentifierEmploye("0252030425", "chaussette");
         
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("Predictif");
+        
+        /*EntityManagerFactory emf = Persistence.createEntityManagerFactory("Predictif");
         EntityManager em = emf.createEntityManager();
         String jpql = "select m from Medium m";
         Query query = em.createQuery(jpql);
@@ -46,7 +50,16 @@ public class Main {
             System.out.println("Coucou c'est moi");
 
             
-        } 
+        }
+        */
+        ServiceAuthentification sa = new ServiceAuthentification();
+        ServiceConsultation sc = new ServiceConsultation();
+        List<Medium> listMed = sc.listerMediums();
+        for(Medium m : listMed){
+            System.out.println(m.toString());
+        }
+        //System.out.println(a.toString());
+        //System.out.println(e.toString());
         JpaUtil.destroy();
     }
     

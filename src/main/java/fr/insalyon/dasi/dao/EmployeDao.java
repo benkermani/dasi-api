@@ -22,10 +22,10 @@ public class EmployeDao {
         return em.find(Employe.class, employeId); // renvoie null si l'identifiant n'existe pas
     }
     
-    public Employe chercherParMail(String employeMail) {
+    public Employe chercherParNumeroTelephone(String numeroDeTelephone) {
         EntityManager em = JpaUtil.obtenirContextePersistance();
-        TypedQuery<Employe> query = em.createQuery("SELECT c FROM Employe c WHERE c.adresseEmail = :mail", Employe.class);
-        query.setParameter("mail", employeMail); // correspond au paramètre ":mail" dans la requête
+        TypedQuery<Employe> query = em.createQuery("SELECT c FROM Employe c WHERE c.numeroTelephone = :numeroDeTelephone", Employe.class);
+        query.setParameter("numeroDeTelephone", numeroDeTelephone); // correspond au paramètre ":mail" dans la requête
         List<Employe> employes = query.getResultList();
         Employe result = null;
         if (!employes.isEmpty()) {

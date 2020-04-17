@@ -71,5 +71,8 @@ public class Employe implements Serializable {
         return id;
     }
     
+    public String toString() {
+        return "Employe : id=" + id + ", nom=" + nom + ", motDePasse=" + motDePasse + ", numeroTelephone=" + numeroTelephone + ",genre : " + genre ;
+    }
     
 }
